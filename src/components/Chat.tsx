@@ -12,10 +12,6 @@ const Chat = (props: IChatProps) => {
   const { onSubmit, messages, loading, disabled } = props;
   const [currentMessage, setCurrentMessage] = useState("");
 
-  const handleMessageChange = (event) => {
-    setCurrentMessage(event.target.value);
-  };
-
   const LoadingSpinner = () => {
     return (
       <div className="flex justify-center">
@@ -69,7 +65,7 @@ const Chat = (props: IChatProps) => {
 
   return (
     <div className="flex h-[400px] flex-col overflow-x-hidden">
-      <div className="flex-1 overflow-y-scroll rounded-t-lg bg-white p-4 space-y-5">
+      <div className="flex-1 space-y-5 overflow-y-scroll rounded-t-lg bg-white p-4">
         {messages.map((message, index) => (
           <Message key={index} message={message} />
         ))}
@@ -80,7 +76,7 @@ const Chat = (props: IChatProps) => {
           type="text"
           placeholder="Type a message..."
           value={currentMessage}
-          onChange={handleMessageChange}
+          onChange={(e) => setCurrentMessage(e.target.value)}
         />
         <button
           className={`float-right rounded ${
