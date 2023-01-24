@@ -10,6 +10,9 @@
     "deploy": "npm run build && gcloud app deploy",
     "clean": "rm -rf .next && rm -rf build"
   },
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "dependencies": {
     "@tanstack/react-query": "^4.10.0",
     "@trpc/client": "10.0.0-proxy-beta.17",
