@@ -1,19 +1,27 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
-import { z } from "zod";
 import AI from "../../../utils/ai";
-
-const CHARACTER_LIMIT = 3000;
+import { articleRequest, questionAnswerRequest } from "../../../types/api";
 
 export const apiRouter = router({
-  ping: publicProcedure.query(() => { return "PONG" }),
-  summarize: protectedProcedure
-    .input(z.object({ article: z.string().max(CHARACTER_LIMIT) }).required())
-    .mutation(async ({ input }) => {
-      return await AI.summarize(input?.article) as string;
+  ping: publicProcedure.query(() => {
+    return "PONG";
   }),
-  paraphrase: publicProcedure
-    .input(z.object({ article: z.string().max(CHARACTER_LIMIT) }).required())
+  summarize: protectedProcedure
+    .input(articleRequest)
     .mutation(async ({ input }) => {
-      return await AI.paraphrase(input?.article) as string;
-  })
-})
+      const result = (await AI.summarize(input?.article)) as string;
+      return result;
+    }),
+  paraphrase: protectedProcedure
+    .input(articleRequest)
+    .mutation(async ({ input }) => {
+      const result = (await AI.paraphrase(input?.article)) as string;
+      return result;
+    }),
+  questionAnswer: protectedProcedure
+    .input(questionAnswerRequest)
+    .mutation(async ({ input }) => {
+      const result = (await AI.answer(input)) as string;
+      return result;
+    }),
+});
