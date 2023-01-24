@@ -2,3 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+.dot-container {
+  transform: translate(-50%, -50%);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.animate-ping {
+  animation: ping 1s infinite;
+}
+
+@keyframes ping {
+  0% {
+    transform: scale(1);
+  }
+  75% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

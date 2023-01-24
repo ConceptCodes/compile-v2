@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 import { trpc } from "../utils/trpc";
 import Wrapper from "../components/Wrapper";
@@ -12,33 +12,43 @@ const QA: NextPage = () => {
   const api = trpc.v1.questionAnswer.useMutation();
   const [messages, setMessages] = useState<IChatLog[]>([]);
   const [article, setArticle] = useState("");
+  const toastRef = useRef(null);
 
   useEffect(() => {
     if (api.isSuccess) {
-      toast("Answer Generated 👌🏾", {
+      toast.update(toastRef.current, {
+        render: "Answer Generated 👌🏾",
+        type: "success",
         autoClose: 2000,
         position: "top-right",
         closeOnClick: true,
       });
+      setMessages([...messages, { text: api.data as string, type: "answer" }]);
     } else if (api.isError) {
-      toast(api.error.message, {
+      toast.update(toastRef.current, {
+        render: api.error.message,
         autoClose: 2000,
+        type: "error",
         position: "top-right",
         closeOnClick: true,
       });
     }
-  }, [api]);
+  }, [api.isSuccess, api.isError]);
 
-  const getAnswer = (question: string) => {
-    if (article?.length > 0) {
-      const chatlog = messages
-        .map((msg) =>
-          msg.type === "question" ? `Q: ${msg.text}` : `A: ${msg.text}`
-        )
-        .join("\n");
-      api.mutate({ article, question, chatlog });
-    }
-  };
+  const getAnswer = useCallback(
+    (question: string) => {
+      if (article?.length > 0) {
+        const chatlog = messages
+          .map((msg) =>
+            msg.type === "question" ? `Q: ${msg.text}` : `A: ${msg.text}`
+          )
+          .join("\n");
+        api.mutate({ article, question, chatlog });
+        toastRef.current = toast.info("Generating Answer...");
+      }
+    },
+    [article, messages]
+  );
 
   return (
     <Wrapper
@@ -47,7 +57,7 @@ const QA: NextPage = () => {
       imgSrc="/qa.png"
       desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
     >
-      <section className="flex w-full items-center justify-between space-x-4 py-5">
+      <section className="flex max-h-fit w-full items-center justify-between space-x-4 py-5">
         <div className="grow font-bold text-black">
           <Content
             label="Article"
@@ -64,6 +74,8 @@ const QA: NextPage = () => {
               setMessages([...messages, { text: question, type: "question" }]);
             }}
             messages={messages}
+            disabled={api.isLoading || article?.length === 0}
+            loading={api.isLoading}
           />
         </div>
       </section>
