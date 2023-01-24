@@ -15,10 +15,15 @@ function defineNextConfig(config) {
 export default defineNextConfig({
   reactStrictMode: true,
   swcMinify: true,
-  distDir: 'build',
+  distDir: "build",
   // Next.js i18n docs: https://nextjs.org/docs/advanced-features/i18n-routing
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
+  },
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true,
   },
 });

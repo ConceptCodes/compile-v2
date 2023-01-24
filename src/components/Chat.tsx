@@ -36,16 +36,16 @@ const Chat = (props: IChatProps) => {
 
   const Message = ({ message }) => {
     return (
-      <div className="mb-2 flex flex-row items-center justify-start space-x-2">
+      <div className="mb-2 flex flex-col  justify-start space-x-2">
         <div className="flex-grow">
           <div
-            className={`max-w-36 flex w-fit flex-1 flex-col justify-start space-x-2 overflow-x-hidden rounded-lg p-3 ${
+            className={`max-w-36 flex w-fit flex-1  justify-start space-x-2 overflow-x-hidden rounded-lg p-3 ${
               message.type === "question"
                 ? "float-right bg-blue-600"
                 : "float-left bg-gray-100"
             }`}
           >
-            <div className="flex flex-row justify-start space-x-2">
+            <div className="justify-start space-x-2">
               <div className="flex-shrink-0">
                 <span className="text-sm font-medium text-gray-900">
                   {message.type != "question" && "Bot:"}
@@ -69,7 +69,7 @@ const Chat = (props: IChatProps) => {
 
   return (
     <div className="flex h-[400px] flex-col overflow-x-hidden">
-      <div className="flex-1 overflow-y-scroll rounded-t-lg bg-white p-4">
+      <div className="flex-1 overflow-y-scroll rounded-t-lg bg-white p-4 space-y-5">
         {messages.map((message, index) => (
           <Message key={index} message={message} />
         ))}

@@ -7,7 +7,6 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "deploy": "npm run build && gcloud app deploy",
     "clean": "rm -rf .next && rm -rf build"
   },
   "engines": {
